@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "window-framework",
+    "bins/bouncing-box",
+]
+resolver = "2"
