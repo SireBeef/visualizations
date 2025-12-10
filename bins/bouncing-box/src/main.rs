@@ -1,8 +1,10 @@
 use window_framework::{Canvas, CoordinateSystem, World, WorldConfig};
 
-const WIDTH: u32 = 320;
-const HEIGHT: u32 = 240;
-const BOX_SIZE: i16 = 64;
+const RESOLUTION_WIDTH: u32 = 320;
+const RESOLUTION_HEIGHT: u32 = 240;
+const WIDTH: u32 = 64;
+const HEIGHT: u32 = 48;
+const BOX_SIZE: i16 = 8;
 
 struct BouncingBox {
     box_x: i16,
@@ -22,7 +24,16 @@ impl World for BouncingBox {
     }
 
     fn config() -> WorldConfig {
-        WorldConfig::new(WIDTH, HEIGHT, "Bouncing Box", CoordinateSystem::TopLeft)
+        WorldConfig::new(
+            RESOLUTION_WIDTH,
+            RESOLUTION_HEIGHT,
+            "Bouncing Box",
+            CoordinateSystem::TopLeft,
+            Some(WIDTH),
+            Some(HEIGHT),
+            true,
+            (255, 255, 255, 255),
+        )
     }
 
     fn update(&mut self) {
@@ -39,7 +50,7 @@ impl World for BouncingBox {
 
     fn draw(&self, canvas: &mut Canvas) {
         // Clear with cyan background
-        canvas.clear((0x48, 0xb2, 0xe8, 0xff));
+        canvas.clear((0, 0, 0, 0));
 
         // Draw purple box
         canvas.fill_rect(

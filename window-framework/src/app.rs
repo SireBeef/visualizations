@@ -20,11 +20,23 @@ pub struct App<W: World> {
     input: InputState,
     width: u32,
     height: u32,
+    pixel_grid_width: u32,
+    pixel_grid_height: u32,
     coordinate_system: CoordinateSystem,
+    show_grid: bool,
+    grid_color: (u8, u8, u8, u8),
 }
 
 impl<W: World> App<W> {
-    pub fn new(width: u32, height: u32, coordinate_system: CoordinateSystem) -> Self {
+    pub fn new(
+        width: u32,
+        height: u32,
+        pixel_grid_width: u32,
+        pixel_grid_height: u32,
+        coordinate_system: CoordinateSystem,
+        show_grid: bool,
+        grid_color: (u8, u8, u8, u8),
+    ) -> Self {
         Self {
             window: None,
             pixels: None,
@@ -32,7 +44,11 @@ impl<W: World> App<W> {
             input: InputState::new(),
             width,
             height,
+            pixel_grid_width,
+            pixel_grid_height,
             coordinate_system,
+            show_grid,
+            grid_color,
         }
     }
 }
@@ -82,8 +98,18 @@ impl<W: World> ApplicationHandler for App<W> {
                     world.handle_input(&self.input);
                     world.update();
                     let frame = self.pixels.as_mut().unwrap().frame_mut();
-                    let mut canvas = Canvas::new(frame, self.width, self.height, self.coordinate_system);
+                    let mut canvas = Canvas::new(
+                        frame,
+                        self.width,
+                        self.height,
+                        self.pixel_grid_width,
+                        self.pixel_grid_height,
+                        self.coordinate_system,
+                        self.show_grid,
+                        self.grid_color,
+                    );
                     world.draw(&mut canvas);
+                    canvas.draw_grid();
                     if let Err(err) = self.pixels.as_ref().unwrap().render() {
                         log_error("pixels.render", err);
                         event_loop.exit();
