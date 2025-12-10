@@ -1,3 +1,4 @@
+use crate::canvas::{Canvas, CoordinateSystem};
 use crate::input::InputState;
 
 /// Configuration for a World implementation
@@ -5,6 +6,19 @@ pub struct WorldConfig {
     pub width: u32,
     pub height: u32,
     pub title: String,
+    pub coordinate_system: CoordinateSystem,
+}
+
+impl WorldConfig {
+    /// Create a new WorldConfig
+    pub fn new(width: u32, height: u32, title: impl Into<String>, coordinate_system: CoordinateSystem) -> Self {
+        Self {
+            width,
+            height,
+            title: title.into(),
+            coordinate_system,
+        }
+    }
 }
 
 /// Trait that defines the interface for a visualization world
@@ -18,10 +32,8 @@ pub trait World: Sized {
     /// Update the world state (called once per frame)
     fn update(&mut self);
 
-    /// Draw the world state to the frame buffer
-    ///
-    /// Frame format: RGBA8 (4 bytes per pixel)
-    fn draw(&self, frame: &mut [u8]);
+    /// Draw the world state to the canvas
+    fn draw(&self, canvas: &mut Canvas);
 
     /// Handle input events (called once per frame before update)
     ///

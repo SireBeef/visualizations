@@ -11,7 +11,7 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{input::InputState, world::World};
+use crate::{canvas::{Canvas, CoordinateSystem}, input::InputState, world::World};
 
 pub struct App<W: World> {
     window: Option<Arc<Window>>,
@@ -20,10 +20,11 @@ pub struct App<W: World> {
     input: InputState,
     width: u32,
     height: u32,
+    coordinate_system: CoordinateSystem,
 }
 
 impl<W: World> App<W> {
-    pub fn new(width: u32, height: u32) -> Self {
+    pub fn new(width: u32, height: u32, coordinate_system: CoordinateSystem) -> Self {
         Self {
             window: None,
             pixels: None,
@@ -31,6 +32,7 @@ impl<W: World> App<W> {
             input: InputState::new(),
             width,
             height,
+            coordinate_system,
         }
     }
 }
@@ -79,7 +81,9 @@ impl<W: World> ApplicationHandler for App<W> {
                 if let Some(world) = self.world.as_mut() {
                     world.handle_input(&self.input);
                     world.update();
-                    world.draw(self.pixels.as_mut().unwrap().frame_mut());
+                    let frame = self.pixels.as_mut().unwrap().frame_mut();
+                    let mut canvas = Canvas::new(frame, self.width, self.height, self.coordinate_system);
+                    world.draw(&mut canvas);
                     if let Err(err) = self.pixels.as_ref().unwrap().render() {
                         log_error("pixels.render", err);
                         event_loop.exit();
