@@ -2,8 +2,8 @@ use window_framework::{Canvas, CoordinateSystem, World, WorldConfig};
 
 const RESOLUTION_WIDTH: u32 = 320;
 const RESOLUTION_HEIGHT: u32 = 240;
-const WIDTH: u32 = 64;
-const HEIGHT: u32 = 48;
+const WIDTH: u32 = RESOLUTION_WIDTH / 8;
+const HEIGHT: u32 = RESOLUTION_HEIGHT / 8;
 const BOX_SIZE: i16 = 8;
 
 struct BouncingBox {

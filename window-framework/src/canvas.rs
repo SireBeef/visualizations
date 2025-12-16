@@ -185,24 +185,28 @@ impl<'a> Canvas<'a> {
             return;
         }
 
-        // Draw vertical lines
-        for logical_x in 0..=self.logical_width {
+        // Draw vertical lines (including boundaries)
+        for logical_x in 0..self.logical_width {
             let phys_x = logical_x * self.pixel_scale_x;
-            if phys_x < self.physical_width {
-                for phys_y in 0..self.physical_height {
-                    self.set_physical_pixel(phys_x, phys_y, self.grid_color);
-                }
+            for phys_y in 0..self.physical_height {
+                self.set_physical_pixel(phys_x, phys_y, self.grid_color);
             }
         }
+        // Draw right edge
+        for phys_y in 0..self.physical_height {
+            self.set_physical_pixel(self.physical_width - 1, phys_y, self.grid_color);
+        }
 
-        // Draw horizontal lines
-        for logical_y in 0..=self.logical_height {
+        // Draw horizontal lines (including boundaries)
+        for logical_y in 0..self.logical_height {
             let phys_y = logical_y * self.pixel_scale_y;
-            if phys_y < self.physical_height {
-                for phys_x in 0..self.physical_width {
-                    self.set_physical_pixel(phys_x, phys_y, self.grid_color);
-                }
+            for phys_x in 0..self.physical_width {
+                self.set_physical_pixel(phys_x, phys_y, self.grid_color);
             }
+        }
+        // Draw bottom edge
+        for phys_x in 0..self.physical_width {
+            self.set_physical_pixel(phys_x, self.physical_height - 1, self.grid_color);
         }
     }
 }
